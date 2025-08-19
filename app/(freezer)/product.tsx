@@ -24,9 +24,13 @@ export default function ProductScreen() {
     loadData();
   }, []);
 
-  useEffect(() => {
-    saveData();
-  }, [product]);
+  // Save data immediately when any input changes
+  const handleInputChange = (key: keyof typeof product, value: string) => {
+    const newProduct = { ...product, [key]: value };
+    setProduct(newProduct);
+    // Save immediately
+    AsyncStorage.setItem('productData', JSON.stringify(newProduct)).catch(console.error);
+  };
 
   const loadData = async () => {
     try {
@@ -37,18 +41,6 @@ export default function ProductScreen() {
     } catch (error) {
       console.error('Error loading product data:', error);
     }
-  };
-
-  const saveData = async () => {
-    try {
-      await AsyncStorage.setItem('productData', JSON.stringify(product));
-    } catch (error) {
-      console.error('Error saving product data:', error);
-    }
-  };
-
-  const handleInputChange = (key: keyof typeof product, value: string) => {
-    setProduct(prev => ({ ...prev, [key]: value }));
   };
 
   const productOptions = Object.keys(PRODUCTS).map(key => ({

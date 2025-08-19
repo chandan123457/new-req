@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 import { Header } from '@/components/Header';
 import { InputCard } from '@/components/InputCard';
 import { PickerCard } from '@/components/PickerCard';
@@ -22,9 +23,27 @@ export default function RoomScreen() {
     loadData();
   }, []);
 
-  useEffect(() => {
-    saveData();
-  }, [dimensions]);
+  // Save data immediately when any input changes
+  const handleInputChange = (key: keyof typeof dimensions, value: string) => {
+    const newDimensions = { ...dimensions, [key]: value };
+    setDimensions(newDimensions);
+    // Save immediately
+    AsyncStorage.setItem('roomData', JSON.stringify(newDimensions)).catch(console.error);
+  };
+
+  const handleInsulationTypeChange = (value: string | number) => {
+    const newDimensions = { ...dimensions, insulationType: value as string };
+    setDimensions(newDimensions);
+    // Save immediately
+    AsyncStorage.setItem('roomData', JSON.stringify(newDimensions)).catch(console.error);
+  };
+
+  const handleInsulationThicknessChange = (value: string | number) => {
+    const newDimensions = { ...dimensions, insulationThickness: value as number };
+    setDimensions(newDimensions);
+    // Save immediately
+    AsyncStorage.setItem('roomData', JSON.stringify(newDimensions)).catch(console.error);
+  };
 
   const loadData = async () => {
     try {
@@ -35,26 +54,6 @@ export default function RoomScreen() {
     } catch (error) {
       console.error('Error loading room data:', error);
     }
-  };
-
-  const saveData = async () => {
-    try {
-      await AsyncStorage.setItem('roomData', JSON.stringify(dimensions));
-    } catch (error) {
-      console.error('Error saving room data:', error);
-    }
-  };
-
-  const handleInputChange = (key: keyof typeof dimensions, value: string) => {
-    setDimensions(prev => ({ ...prev, [key]: value }));
-  };
-
-  const handleInsulationTypeChange = (value: string | number) => {
-    setDimensions(prev => ({ ...prev, insulationType: value as string }));
-  };
-
-  const handleInsulationThicknessChange = (value: string | number) => {
-    setDimensions(prev => ({ ...prev, insulationThickness: value as number }));
   };
 
   const length = parseFloat(dimensions.length) || 0;

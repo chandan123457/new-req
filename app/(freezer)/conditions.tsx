@@ -17,9 +17,13 @@ export default function ConditionsScreen() {
     loadData();
   }, []);
 
-  useEffect(() => {
-    saveData();
-  }, [conditions]);
+  // Save data immediately when any input changes
+  const handleInputChange = (key: keyof typeof conditions, value: string) => {
+    const newConditions = { ...conditions, [key]: value };
+    setConditions(newConditions);
+    // Save immediately
+    AsyncStorage.setItem('conditionsData', JSON.stringify(newConditions)).catch(console.error);
+  };
 
   const loadData = async () => {
     try {
@@ -30,18 +34,6 @@ export default function ConditionsScreen() {
     } catch (error) {
       console.error('Error loading conditions data:', error);
     }
-  };
-
-  const saveData = async () => {
-    try {
-      await AsyncStorage.setItem('conditionsData', JSON.stringify(conditions));
-    } catch (error) {
-      console.error('Error saving conditions data:', error);
-    }
-  };
-
-  const handleInputChange = (key: keyof typeof conditions, value: string) => {
-    setConditions(prev => ({ ...prev, [key]: value }));
   };
 
   const externalTemp = parseFloat(conditions.externalTemp) || 0;

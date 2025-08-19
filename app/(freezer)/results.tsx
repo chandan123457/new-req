@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 import { Header } from '@/components/Header';
 import { calculateCoolingLoad } from '@/utils/calculations';
 
@@ -9,8 +10,20 @@ export default function ResultsScreen() {
   const [results, setResults] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
+  // Recalculate whenever the screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      calculateResults();
+    }, [])
+  );
+
+  // Also set up a listener for storage changes
   useEffect(() => {
-    calculateResults();
+    const interval = setInterval(() => {
+      calculateResults();
+    }, 1000); // Check for changes every second
+
+    return () => clearInterval(interval);
   }, []);
 
   const calculateResults = async () => {
