@@ -50,7 +50,7 @@ export default function ConditionsScreen() {
 
   return (
     <LinearGradient colors={['#F8FAFC', '#EBF8FF']} style={styles.container}>
-      <Header title="Operating Conditions" step={2} totalSteps={4} />
+      <Header title="Operating Conditions" step={2} totalSteps={3} />
       
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.section}>

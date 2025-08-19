@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Header } from '@/components/Header';
 import { InputCard } from '@/components/InputCard';
+import { PickerCard } from '@/components/PickerCard';
 
 export default function RoomScreen() {
   const [dimensions, setDimensions] = useState({
@@ -12,6 +13,9 @@ export default function RoomScreen() {
     height: '2.5',
     doorWidth: '1.0',
     doorHeight: '2.0',
+    doorOpenings: '15',
+    insulationType: 'PUF',
+    insulationThickness: 150,
   });
 
   useEffect(() => {
@@ -45,6 +49,14 @@ export default function RoomScreen() {
     setDimensions(prev => ({ ...prev, [key]: value }));
   };
 
+  const handleInsulationTypeChange = (value: string | number) => {
+    setDimensions(prev => ({ ...prev, insulationType: value as string }));
+  };
+
+  const handleInsulationThicknessChange = (value: string | number) => {
+    setDimensions(prev => ({ ...prev, insulationThickness: value as number }));
+  };
+
   const length = parseFloat(dimensions.length) || 0;
   const width = parseFloat(dimensions.width) || 0;
   const height = parseFloat(dimensions.height) || 0;
@@ -57,9 +69,23 @@ export default function RoomScreen() {
   const volume = length * width * height;
   const doorArea = doorWidth * doorHeight;
 
+  const insulationTypes = [
+    { label: 'Polyurethane Foam (PUF)', value: 'PUF' },
+    { label: 'Expanded Polystyrene (EPS)', value: 'EPS' },
+    { label: 'Rockwool', value: 'Rockwool' },
+  ];
+
+  const thicknessOptions = [
+    { label: '75mm', value: 75 },
+    { label: '100mm', value: 100 },
+    { label: '125mm', value: 125 },
+    { label: '150mm (Recommended)', value: 150 },
+    { label: '200mm', value: 200 },
+  ];
+
   return (
     <LinearGradient colors={['#F8FAFC', '#EBF8FF']} style={styles.container}>
-      <Header title="Room Specifications" step={1} totalSteps={4} />
+      <Header title="Room Specifications" step={1} totalSteps={3} />
       
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.section}>
@@ -71,6 +97,31 @@ export default function RoomScreen() {
           
           <InputCard label="Door Width" unit="m" value={dimensions.doorWidth} onChangeText={(value) => handleInputChange('doorWidth', value)} />
           <InputCard label="Door Height" unit="m" value={dimensions.doorHeight} onChangeText={(value) => handleInputChange('doorHeight', value)} />
+          
+          <InputCard 
+            label="Daily Door Openings" 
+            unit="times" 
+            value={dimensions.doorOpenings} 
+            onChangeText={(value) => handleInputChange('doorOpenings', value)} 
+          />
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Insulation Specifications</Text>
+          
+          <PickerCard
+            label="Insulation Type"
+            value={dimensions.insulationType}
+            options={insulationTypes}
+            onValueChange={handleInsulationTypeChange}
+          />
+          
+          <PickerCard
+            label="Insulation Thickness"
+            value={dimensions.insulationThickness}
+            options={thicknessOptions}
+            onValueChange={handleInsulationThicknessChange}
+          />
         </View>
 
         <View style={styles.section}>

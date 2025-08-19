@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { Chrome as Home, Settings, Wrench, Package, ChartBar as BarChart3 } from 'lucide-react-native';
+import { Chrome as Home, Settings, Package, ChartBar as BarChart3 } from 'lucide-react-native';
 
 export default function FreezerTabLayout() {
   return (
@@ -38,15 +38,6 @@ export default function FreezerTabLayout() {
           title: 'Conditions',
           tabBarIcon: ({ color, size }) => (
             <Settings color={color} size={size} strokeWidth={2} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="construction"
-        options={{
-          title: 'Construction',
-          tabBarIcon: ({ color, size }) => (
-            <Wrench color={color} size={size} strokeWidth={2} />
           ),
         }}
       />

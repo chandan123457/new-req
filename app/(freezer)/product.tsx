@@ -16,7 +16,6 @@ export default function ProductScreen() {
     storageType: 'Boxed',
     numberOfPeople: '2',
     workingHours: '4',
-    doorOpenings: '15',
     lightingWattage: '150',
     equipmentLoad: '300',
   });
@@ -90,7 +89,7 @@ export default function ProductScreen() {
 
   return (
     <LinearGradient colors={['#F8FAFC', '#EBF8FF']} style={styles.container}>
-      <Header title="Product & Usage Details" step={4} totalSteps={4} />
+      <Header title="Product & Usage Details" step={3} totalSteps={3} />
       
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.section}>
@@ -147,13 +146,6 @@ export default function ProductScreen() {
             unit="hrs" 
             value={product.workingHours} 
             onChangeText={(value) => handleInputChange('workingHours', value)} 
-          />
-          
-          <InputCard 
-            label="Daily Door Openings" 
-            unit="times" 
-            value={product.doorOpenings} 
-            onChangeText={(value) => handleInputChange('doorOpenings', value)} 
           />
           
           <InputCard 

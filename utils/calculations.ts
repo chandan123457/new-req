@@ -16,11 +16,6 @@ interface ConditionsData {
   pullDownTime: string;
 }
 
-interface ConstructionData {
-  insulationType: string;
-  insulationThickness: number;
-}
-
 interface ProductData {
   productType: string;
   dailyLoad: string;
@@ -29,7 +24,6 @@ interface ProductData {
   storageType: string;
   numberOfPeople: string;
   workingHours: string;
-  doorOpenings: string;
   lightingWattage: string;
   equipmentLoad: string;
 }
@@ -37,7 +31,6 @@ interface ProductData {
 export function calculateCoolingLoad(
   roomData: RoomData, 
   conditionsData: ConditionsData, 
-  constructionData: ConstructionData, 
   productData: ProductData
 ) {
   // Parse input values
@@ -46,6 +39,9 @@ export function calculateCoolingLoad(
   const height = parseFloat(roomData.height) || 2.5;
   const doorWidth = parseFloat(roomData.doorWidth) || 1.0;
   const doorHeight = parseFloat(roomData.doorHeight) || 2.0;
+  const doorOpenings = parseFloat((roomData as any).doorOpenings) || 15;
+  const insulationType = (roomData as any).insulationType || 'PUF';
+  const insulationThickness = (roomData as any).insulationThickness || 150;
   
   const externalTemp = parseFloat(conditionsData.externalTemp) || 35;
   const internalTemp = parseFloat(conditionsData.internalTemp) || -18;
@@ -57,7 +53,6 @@ export function calculateCoolingLoad(
   const outgoingTemp = parseFloat(productData.outgoingTemp) || -18;
   const numberOfPeople = parseFloat(productData.numberOfPeople) || 2;
   const workingHours = parseFloat(productData.workingHours) || 4;
-  const doorOpenings = parseFloat(productData.doorOpenings) || 15;
   const lightingWattage = parseFloat(productData.lightingWattage) || 150;
   const equipmentLoad = parseFloat(productData.equipmentLoad) || 300;
   
@@ -72,9 +67,9 @@ export function calculateCoolingLoad(
   const temperatureDifference = externalTemp - internalTemp;
   
   // Get U-factor from construction data
-  const insulationType = constructionData.insulationType as keyof typeof THERMAL_DATA.uFactors;
-  const thickness = constructionData.insulationThickness as keyof typeof THERMAL_DATA.uFactors.PUF;
-  const uFactor = THERMAL_DATA.uFactors[insulationType]?.[thickness] || 0.17;
+  const insulationTypeKey = insulationType as keyof typeof THERMAL_DATA.uFactors;
+  const thickness = insulationThickness as keyof typeof THERMAL_DATA.uFactors.PUF;
+  const uFactor = THERMAL_DATA.uFactors[insulationTypeKey]?.[thickness] || 0.17;
   
   // Get product and storage data
   const product = PRODUCTS[productData.productType as keyof typeof PRODUCTS] || PRODUCTS["General Food Items"];
@@ -161,8 +156,8 @@ export function calculateCoolingLoad(
     temperatureDifference,
     pullDownTime,
     construction: {
-      type: constructionData.insulationType,
-      thickness: constructionData.insulationThickness,
+      type: insulationType,
+      thickness: insulationThickness,
       uFactor
     },
     transmissionLoad,
@@ -178,6 +173,7 @@ export function calculateCoolingLoad(
     airInfiltrationLoad,
     internalLoads,
     doorLoad,
+    doorOpenings,
     workingHours,
     totalLoad,
     totalLoadWithSafety

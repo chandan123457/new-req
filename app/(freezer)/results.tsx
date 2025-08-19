@@ -17,19 +17,20 @@ export default function ResultsScreen() {
     try {
       const roomData = await AsyncStorage.getItem('roomData');
       const conditionsData = await AsyncStorage.getItem('conditionsData');
-      const constructionData = await AsyncStorage.getItem('constructionData');
       const productData = await AsyncStorage.getItem('productData');
 
-      const room = roomData ? JSON.parse(roomData) : { length: '4.0', width: '3.0', height: '2.5' };
+      const room = roomData ? JSON.parse(roomData) : { 
+        length: '4.0', width: '3.0', height: '2.5', doorWidth: '1.0', doorHeight: '2.0',
+        doorOpenings: '15', insulationType: 'PUF', insulationThickness: 150 
+      };
       const conditions = conditionsData ? JSON.parse(conditionsData) : { externalTemp: '35', internalTemp: '-18', operatingHours: '24' };
-      const construction = constructionData ? JSON.parse(constructionData) : { insulationType: 'PUF', insulationThickness: 150 };
       const product = productData ? JSON.parse(productData) : { 
         productType: 'Beef', dailyLoad: '1000', incomingTemp: '25', outgoingTemp: '-18',
-        storageType: 'Boxed', numberOfPeople: '2', workingHours: '4', doorOpenings: '15', 
+        storageType: 'Boxed', numberOfPeople: '2', workingHours: '4',
         lightingWattage: '150', equipmentLoad: '300' 
       };
 
-      const calculatedResults = calculateCoolingLoad(room, conditions, construction, product);
+      const calculatedResults = calculateCoolingLoad(room, conditions, product);
       setResults(calculatedResults);
       setLoading(false);
     } catch (error) {
@@ -51,7 +52,7 @@ export default function ResultsScreen() {
 
   return (
     <LinearGradient colors={['#F8FAFC', '#EBF8FF']} style={styles.container}>
-      <Header title="Calculation Results" step={5} totalSteps={4} />
+      <Header title="Calculation Results" step={4} totalSteps={3} />
       
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.mainResultCard}>
@@ -147,7 +148,7 @@ export default function ResultsScreen() {
             </View>
             <View style={styles.breakdownRow}>
               <Text style={styles.breakdownLabel}>Daily openings:</Text>
-              <Text style={styles.breakdownValue}>{results.productInfo.mass > 0 ? Math.round(parseFloat(results.productInfo.mass.toString()) / 100) : 15} times</Text>
+              <Text style={styles.breakdownValue}>{results.doorOpenings} times</Text>
             </View>
             <View style={[styles.breakdownRow, styles.subtotalRow]}>
               <Text style={styles.subtotalLabel}>Door infiltration load:</Text>
