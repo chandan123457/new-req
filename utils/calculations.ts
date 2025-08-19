@@ -39,7 +39,7 @@ export function calculateCoolingLoad(
   const height = parseFloat(roomData.height) || 2.5;
   const doorWidth = parseFloat(roomData.doorWidth) || 1.0;
   const doorHeight = parseFloat(roomData.doorHeight) || 2.0;
-  const doorOpenings = parseFloat((roomData as any).doorOpenings) || 15;
+  const doorOpenings = parseFloat((roomData as any).doorOpenings) || 0;
   const insulationType = (roomData as any).insulationType || 'PUF';
   const insulationThickness = (roomData as any).insulationThickness || 150;
   

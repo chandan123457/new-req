@@ -148,7 +148,7 @@ export default function ResultsScreen() {
             </View>
             <View style={styles.breakdownRow}>
               <Text style={styles.breakdownLabel}>Daily openings:</Text>
-              <Text style={styles.breakdownValue}>{results.doorOpenings} times</Text>
+              <Text style={styles.breakdownValue}>{results.doorOpenings} times/day</Text>
             </View>
             <View style={[styles.breakdownRow, styles.subtotalRow]}>
               <Text style={styles.subtotalLabel}>Door infiltration load:</Text>
